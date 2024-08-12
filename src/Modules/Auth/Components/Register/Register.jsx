@@ -1,27 +1,28 @@
 import { Link, useNavigate } from "react-router-dom"
-import logo from "../../../../assets/Images/4 4.svg"
 import { useForm } from "react-hook-form"
 import axios from "axios"
 import { Bounce, ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useState } from "react";
 import LoadingSpinner from "../../../Shared/Components/LoadingSpinner/LoadingSpinner";
-
+import { API_URLs } from "../../../../CONSTANT/URLs";
+import LogoInForm from "../LogoInForm/LogoInForm";
+import { validations } from "../../../../CONSTANT/VALIDATION";
 
 export default function Register() {
 
 
-  const {register, handleSubmit, formState: {errors}} = useForm()
+  const {register, handleSubmit, watch, formState: {errors}} = useForm()
   const [isLoading, setIsLoading] = useState(false)
   const Navigator = useNavigate()
 
 
   let submation = async(data) => {
     setIsLoading(true)
-    return await axios.post(`https://upskilling-egypt.com:3006/api/v1/Users/Register`, data)
+    return await axios.post( API_URLs.register , data)
     .then( (res) => {
       setIsLoading(false);
-      console.log(res.data.message);
+      console.log(res?.data?.message);
       toast.success(`Account created successfully, Verify your email`, {
         position: "top-center",
         autoClose: 2000,
@@ -43,8 +44,6 @@ export default function Register() {
     })
     .catch( (err) => {
       setIsLoading(false);
-      console.log(err);
-      console.log(err.response.data.message);
       toast.error(`${err.response.data.message}`, {
         position: "top-center",
         autoClose: 2000,
@@ -69,9 +68,7 @@ export default function Register() {
 
   <div className="col-md-6 bg-white rounded-3 pad-x py-5">
 
-    <div className="text-center">
-      <img src={logo} alt="logo"/>
-    </div>
+    <LogoInForm/>
 
     <div className="py-2 mt-2 mb-4 text-center text-lg-start">
       <h3 className="fw-bold">Register</h3>
@@ -82,32 +79,23 @@ export default function Register() {
     <form onSubmit={handleSubmit(submation)} className="d-flex flex-wrap justify-content-between align-items-center">
 
       <div className="input-group w-45 mb-3">
-        <span className="input-group-text px-3"><i className="fa-solid fa-user"></i></span>
-        <input type="text" className="form-control bg-light py-2" placeholder="UserName" {...register("userName", {
-          required: "User name is required",
-          pattern: {
-            value: /^[a-zA-Z\d]+\d+$/,
-            message: "The userName must contain characters and end with numbers without spaces"
-          }
-        })}/>
+        <span className="sr-only">userName Icion</span>
+        <span className="input-group-text px-3"><i aria-hidden="true" className="fa-solid fa-user"></i></span>
+        <input type="text" className="form-control bg-light py-2" placeholder="UserName" {...register("userName", validations.userName)}/>
         {errors.userName && <p className="alert alert-danger p-1 my-1 ps-2 rounded-1 w-100">{errors.userName.message}</p>}
       </div>
 
       <div className="input-group w-45 mb-3 ">
-        <span className="input-group-text px-3"><i className="fa-regular fa-envelope"></i></span>
-        <input type="email" className="form-control bg-light py-2" placeholder="Enter your E-mail" {...register("email", {
-          required: "email is required",
-          pattern: {
-            value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g,
-            message: "enter a valid email"
-          }
-        })}/>
+        <span className="sr-only">email Icion</span>
+        <span className="input-group-text px-3"><i aria-hidden="true" className="fa-regular fa-envelope"></i></span>
+        <input type="email" className="form-control bg-light py-2" placeholder="Enter your E-mail" {...register("email", validations.email)}/>
         {errors.email && <p className="alert alert-danger p-1 my-1 ps-2 rounded-1 w-100">{errors.email.message}</p>}
       </div>
 
 
       <div className="input-group w-45 mb-3 ">
-        <span className="input-group-text px-3"><i className="fa-solid fa-earth-africa"></i></span>
+        <span className="sr-only">country Icion</span>
+        <span className="input-group-text px-3"><i aria-hidden="true" className="fa-solid fa-earth-africa"></i></span>
         <input type="text" className="form-control bg-light py-2" placeholder="Country" {...register("country", {
           required: "country is required",
         })}/>
@@ -116,7 +104,8 @@ export default function Register() {
 
 
       <div className="input-group w-45 mb-3 ">
-        <span className="input-group-text px-3"><i className="fa-solid fa-mobile"></i></span>
+        <span className="sr-only">phoneNumber Icion</span>
+        <span className="input-group-text px-3"><i aria-hidden="true" className="fa-solid fa-mobile"></i></span>
         <input type="text" className="form-control bg-light py-2" placeholder="Phone Number" {...register("phoneNumber", {
           required: "phoneNumber is required",
         })}/>
@@ -127,26 +116,19 @@ export default function Register() {
 
 
       <div className="input-group w-45 mb-3">
-        <span className="input-group-text px-3"><i className="fa-solid fa-lock"></i></span>
-        <input type="password" className="form-control bg-light py-2" placeholder="Password" {...register("password", {
-          required: "password is required",
-          pattern: {
-            value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
-            message: "password must include at least one lowercase & uppercase letter, one digit, one special character, and be at least 6 characters long"
-          }
-        })} />
+        <span className="sr-only">password Icion</span>
+        <span className="input-group-text px-3"><i aria-hidden="true" className="fa-solid fa-lock"></i></span>
+        <input id="password" type="password" className="form-control bg-light py-2" placeholder="Password" {...register("password", validations.password )} />
         {errors.password && <p className="alert alert-danger p-1 my-1 ps-2 rounded-1 w-100">{errors.password.message}</p>}
       </div>
 
 
       <div className="input-group w-45">
-        <span className="input-group-text px-3"><i className="fa-solid fa-lock"></i></span>
+        <span className="sr-only">password Icion</span>
+        <span className="input-group-text px-3"><i aria-hidden="true" className="fa-solid fa-lock"></i></span>
         <input type="password" className="form-control bg-light py-2" placeholder="confirm-password" {...register("confirmPassword", {
-          required: "password is required",
-          pattern: {
-            value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
-            message: "password must include at least one lowercase & uppercase letter, one digit, one special character, and be at least 6 characters long"
-          }
+            validate: (value) =>
+              value === watch("password") || "The passwords do not match" 
         })} />
         {errors.confirmPassword && <p className="alert alert-danger p-1 my-1 ps-2 rounded-1 w-100">{errors.confirmPassword.message}</p>}
       </div>
@@ -154,7 +136,7 @@ export default function Register() {
 
 
 
-      <div className="mb-3 w-100">
+      <div className="mb-3 w-100 login-form">
         <Link to="/" className="text-success text-decoration-none">Login Now?</Link>
       </div>
 

@@ -1,4 +1,3 @@
-import logo from "../../../../assets/Images/4 4.svg"
 import { useForm } from "react-hook-form"
 import axios from "axios"
 import { Bounce, ToastContainer, toast } from 'react-toastify';
@@ -6,7 +5,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useState } from "react";
 import LoadingSpinner from "../../../Shared/Components/LoadingSpinner/LoadingSpinner";
 import { useNavigate } from "react-router-dom";
-
+import {API_URLs} from "../../../../CONSTANT/URLs.js"
+import LogoInForm from "../LogoInForm/LogoInForm.jsx";
+import { validations } from "../../../../CONSTANT/VALIDATION.js";
 
 export default function ForgetPassword() {
 
@@ -18,7 +19,7 @@ export default function ForgetPassword() {
 
   let submation = async(data) => {
     setIsLoading(true)
-    return await axios.post(`https://upskilling-egypt.com:3006/api/v1/Users/Reset/Request`, data)
+    return await axios.post(API_URLs.forgetPassword, data)
     .then( (res) => {
       setIsLoading(false);
       console.log(res.data.message);
@@ -38,7 +39,7 @@ export default function ForgetPassword() {
         });
 
       setTimeout( () => {
-        Navigator("/resetPassword")
+        Navigator("/reset-Password")
       }, 2000)
 
     })
@@ -69,9 +70,7 @@ export default function ForgetPassword() {
 
   <div className="col-md-6 bg-white rounded-3 pad-x py-5">
 
-    <div className="text-center">
-      <img src={logo} alt="logo"/>
-    </div>
+    <LogoInForm/>
 
     <div className="py-2 mt-2 mb-4 text-center text-lg-start">
       <h3 className="fw-bold">Forgot Your Password?</h3>
@@ -83,14 +82,9 @@ export default function ForgetPassword() {
 
 
       <div className="input-group mb-5">
-        <span className="input-group-text px-3"><i className="fa-regular fa-envelope"></i></span>
-        <input type="email" className="form-control bg-light py-2" placeholder="Enter your E-mail" {...register("email", {
-          required: "email is required",
-          pattern: {
-            value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g,
-            message: "enter a valid email"
-          }
-        })}/>
+        <span className="sr-only">email Icion</span>
+        <span className="input-group-text px-3"><i aria-hidden="true" className="fa-regular fa-envelope"></i></span>
+        <input type="email" className="form-control bg-light py-2" placeholder="Enter your E-mail" {...register("email", validations.email)}/>
         {errors.email && <p className="alert alert-danger p-1 my-1 ps-2 rounded-1 w-100">{errors.email.message}</p>}
       </div>
 
